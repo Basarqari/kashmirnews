@@ -1,10 +1,12 @@
 const express = require('express');
 const GK = require('./gk');
 const RK = require('./rk');
+const compression = require('compression');
 const NodeCache = require("node-cache");
 const cache = new NodeCache({ stdTTL: 100, checkperiod: 300 });
 
 const app = express();
+app.use(compression());
 app.set('port', process.env.PORT || 3001);
 
 app.get('*', (req, res) => {
