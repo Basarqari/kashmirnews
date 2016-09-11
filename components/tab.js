@@ -16,5 +16,4 @@ function tab(story) {
   }, '');
 }
 
-
 module.exports = tab;

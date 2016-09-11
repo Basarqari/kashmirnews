@@ -1,7 +1,6 @@
 const fetch = require('isomorphic-fetch');
 const cheerio = require('cheerio');
 
-
 function getGK() {
   var store = {
     source: 'GK',
@@ -9,21 +8,25 @@ function getGK() {
   };
 
   return fetch("http://www.greaterkashmir.com/")
-  .then(res => res.text())
-  .then(res => {
-    let $ = cheerio.load(res);
-    let news = $('.latestNews').first().find('.Latesthead a');
-    $(news).each((i, elem) => {
-      var data = {
-        title: $(elem).text().trim(),
-        url: $(elem).attr('href'),
-        content: null
+    .then(res => res.text())
+    .then(res => {
+      let $ = cheerio.load(res);
+      if($('.latestNews').length === 3) {
+        let news = $('.latestNews').first().find('.Latesthead a');
+        $(news).each((i, elem) => {
+          var data = {
+            title: $(elem).text().trim(),
+            url: $(elem).attr('href'),
+            content: null
+          };
+          store.data.push(data);
+        });
+      } else {
+        store.data.push({title: 'No news updates found', url: '#'})
       }
-      store.data.push(data);
-    })
 
-    return store;
-  })
+      return store;
+    });
 }
 
 module.exports = getGK();

@@ -14,6 +14,7 @@ function tabList(tabListData) {
 </div>
     `
     acc += tabWrapper;
+
     return acc;
   }, '');
 };
