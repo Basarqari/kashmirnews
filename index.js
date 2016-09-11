@@ -134,12 +134,12 @@ function prepareHTML(tabs) {
     color: #396a86;
   }
 
-  .label__GK {
+  .label__RK {
     border-right: none;
     border-top-left-radius: 5px;
   }
 
-  .label__RK {
+  .label__GK {
     border-top-right-radius: 5px;
   }
 
