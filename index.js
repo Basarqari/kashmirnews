@@ -52,10 +52,11 @@ function createTabs(tabs) {
 
 function createTab(story) {
   return story.data.reduce((acc, item) => {
+    var url = story.source === "RK" ? "http://www.risingkashmir.com/news/" : "http://www.greaterkashmir.com";
     var content = item.content ? `<p>${item.content}</p>` : "";
     var s = `
     <li>
-    <h3><a href=http://www.risingkashmir.com/news/${item.url}>${item.title}</a></h3>
+    <h3><a href=${url}${item.url}>${item.title}</a></h3>
       ${content}
     </li>
     `;
