@@ -6,6 +6,9 @@ function getRK() {
   })
   .then(response => response.json())
   .then(response => {
+    if(response == null) {
+      return { source: 'RK', data: [{title: 'No news updates found', url: '#'}] };
+    }
     return response.result.reduce((acc, story) => {
       let temp = {};
       temp.title = story.title;
