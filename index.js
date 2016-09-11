@@ -1,79 +1,170 @@
-const request = require('request');
 const express = require('express');
+const GK = require('./gk');
+const RK = require('./rk');
 const NodeCache = require("node-cache");
-const cache = new NodeCache({ stdTTL: 100, checkperiod: 120 });
+const cache = new NodeCache({ stdTTL: 100, checkperiod: 300 });
 
 const app = express();
 app.set('port', process.env.PORT || 3001);
 
 app.get('*', (req, res) => {
   cache.get('news', function(err, data) {
-    if(!err && data == null) {
-      getLatestNews(res);
+    if(err || typeof data === "undefined") {
+      getNews(res)
     } else {
-      massageData(data, res);
+      body = prepareHTML(createTabs(data));
+      res.send(body);
     }
   });
 });
 
-function getLatestNews(res) {
-  request.post('http://www.risingkashmir.com/Home/get_newsUpdates', (err, r, body) => {
+
+function getNews(res) {
+  return Promise.all([RK, GK])
+  .then(body => {
     cache.set('news', body, (err, success) => {
       if(!err && success) {
-        massageData(body, res);
+        data = prepareHTML(createTabs(body));
+        res.send(data);
       }
     });
-  });
+  })
+  .catch(err => console.log(err));
 }
 
-function massageData(raw, res) {
-  var json = JSON.parse(raw);
-  var data = json.result.reduce((acc, story) => {
-    var date = /\((.*?)\)/.exec(story.publishing_date)[1]
+function createTabs(tabs) {
+  return tabs.reduce((acc, story) => {
+    var tab = createTab(story);
+    var checked = story.source === "RK" ? "checked" : ""
+    var a = `
+    <div class="tab">
+      <input type="radio" id="tab__${story.source}" name="news" class="radio" ${checked} />
+      <label for="tab__${story.source}" class="label label__${story.source}">${story.source}</label>
+      <ul class="tab-list ${story.source}">
+        ${tab}
+      </ul>
+    </div>
+    `
+    acc += a;
+    return acc;
+  }, '')
+};
+
+function createTab(story) {
+  return story.data.reduce((acc, item) => {
+    var content = item.content ? `<p>${item.content}</p>` : "";
     var s = `
     <li>
-    <h3><a href=http://www.risingkashmir.com/news/${story.news_url}>${story.title}</a></h3>
-    <p>${story.news_content}</p>
+    <h3><a href=http://www.risingkashmir.com/news/${item.url}>${item.title}</a></h3>
+      ${content}
     </li>
     `;
     acc += s;
+
     return acc;
-  }, "")
+  }, '');
+}
+
+function prepareHTML(tabs) {
   var html = `
-<!DOCTYPE html>
-<html lang="en">
+  <!DOCTYPE html>
+  <html lang="en">
   <head>
-    <meta charset="UTF-8">
-    <title>Latest news from RK</title>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <style>
-* {
-  font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
-  color: #333;
-}
+  <meta charset="UTF-8">
+  <title>Latest news from RK</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <style>
+  * {
+    font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Helvetica,Arial,sans-serif,"Apple Color Emoji","Segoe UI Emoji","Segoe UI Symbol";
+    color: #333;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-ul {
-  list-style: none;
-  padding-left: 0;
-}
+  body {
+    background: #F9FCFE;
+  }
 
-li {
-  margin-bottom: 2rem;
-}
+  a {
+    text-decoration: none;
+  }
 
-body {
-  max-width: 40rem;
-  margin: auto;
-  padding: 1rem;
-}
-    </style>
+  a:hover {
+    text-decoration: underline;
+  }
+
+  ul {
+    list-style: none;
+    padding-left: 0;
+  }
+
+  li {
+    margin-bottom: 2rem;
+  }
+
+  body {
+    max-width: 40rem;
+    margin: auto;
+    padding: 1rem;
+  }
+
+  .tab-list {
+    display: none;
+    position: absolute;
+    top: 80px;
+    left: 0;
+    right: 0;
+  }
+
+  .label {
+    background: #f4f7f9;
+    border: 1px solid #e5e8ea;
+    color: #97a2aa;
+    display: block;
+    font-size: 1.25rem;
+    padding: 10px;
+    text-align: center;
+  }
+
+  .radio:checked + .label {
+    background: #f9fcfe;
+    border-bottom: none;
+    color: #396a86;
+  }
+
+  .label__GK {
+    border-right: none;
+    border-top-left-radius: 5px;
+  }
+
+  .label__RK {
+    border-top-right-radius: 5px;
+  }
+
+  input:checked + label + .tab-list {
+    display: block;
+  }
+
+  .radio {
+    display: none;
+  }
+  .news {
+    position: relative;
+  }
+  .tab {
+    width: 50%;
+    float: left;
+  }
+  </style>
   </head>
   <body>
-    <ul>${data}</ul>
+  <div class="news">${tabs}</div>
   </body>
-</html>
+  </html>
   `;
-  res.send(html);
+
+  return html;
 }
 
 app.listen(app.get('port'));
