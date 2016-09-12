@@ -11,7 +11,8 @@ function getGK() {
     .then(res => res.text())
     .then(res => {
       let $ = cheerio.load(res);
-      if($('.latestNews').length === 3) {
+      let container = $('#ctl00_ContentPlaceHolder1_mostRead1_dvMostPopular');
+      if($(container).find('h2').text() === "Latest News") {
         let news = $('.latestNews').first().find('.Latesthead a');
         $(news).each((i, elem) => {
           var data = {
