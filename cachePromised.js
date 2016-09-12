@@ -1,5 +1,5 @@
 const NodeCache = require("node-cache");
-const cache = new NodeCache({stdTTL: 100, checkperiod: 300});
+const cache = new NodeCache();
 const getNews = require('./getNews');
 
 exports.cacheGet = function(store) {
