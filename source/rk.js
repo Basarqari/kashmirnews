@@ -7,7 +7,7 @@ function getRK() {
   .then(response => response.json())
   .then(response => {
     if(!response || !response.result) {
-      return { source: 'RK', data: [{title: 'No news updates found', url: '#'}] };
+      return { source: 'RK', data: [{title: 'No news updates found for today.', url: '#'}] };
     }
 
     return response.result.reduce((acc, story) => {

@@ -22,7 +22,7 @@ function getGK() {
           store.data.push(data);
         });
       } else {
-        store.data.push({title: 'No news updates found', url: '#'})
+        store.data.push({title: 'No news updates found for today.', url: '#'})
       }
 
       return store;
