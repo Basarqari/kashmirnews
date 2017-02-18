@@ -30,4 +30,4 @@ function getGK() {
     });
 }
 
-module.exports = getGK();
+module.exports = getGK;

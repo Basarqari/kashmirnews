@@ -7,7 +7,7 @@
     "start": "node index.js"
   },
   "keywords": [],
-  "author": "",
+  "author": "Bassam Ismail <skippednote@gmail.com>",
   "license": "ISC",
   "dependencies": {
     "cheerio": "^0.22.0",
@@ -19,5 +19,6 @@
   },
   "engines": {
     "node": "6.3.0"
-  }
+  },
+  "repository": "https://github.com/skippednote/kashmirnews.git"
 }

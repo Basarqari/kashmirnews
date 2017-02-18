@@ -23,4 +23,4 @@ function getRK() {
   })
 }
 
-module.exports = getRK();
+module.exports = getRK;
