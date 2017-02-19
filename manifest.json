@@ -3,11 +3,9 @@
   "name": "KashmirNews",
   "short_name": "KashmirNew",
   "description": "Replaces Chrome's default tab with latest news from Kashmirs two top newspapers",
-  "version": "0.1",
+  "version": "0.1.1",
   "permissions": [
-    "tabs",
-    "storage",
-    "webNavigation"
+    "tabs"
   ],
   "icons": {
     "16": "favicons/KN16.png",
