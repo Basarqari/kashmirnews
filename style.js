@@ -88,6 +88,19 @@ input:checked + label + .tab-list {
 .more-content {
   display: none;
 }
+.attribution {
+  font-size: 1rem;
+  margin-bottom: 1rem;
+  color: #8c8c8c;
+}
+footer {
+  text-align: center;
+}
+footer a {
+  padding: 1rem;
+  display: inline-block;
+  color: #3399ff;
+}
 `;
 
 module.exports = style;
