@@ -1,7 +1,7 @@
 const tab = require('./tab');
 
 function tabList(tabListData) {
-  return tabListData.reduce((acc, story) => {
+  return JSON.parse(tabListData).reduce((acc, story) => {
     var tabItem = tab(story);
     var checked = story.source === "RK" ? "checked" : ""
     var tabWrapper = `
@@ -12,7 +12,7 @@ function tabList(tabListData) {
     ${tabItem}
   </ul>
 </div>
-    `
+    `;
     acc += tabWrapper;
 
     return acc;

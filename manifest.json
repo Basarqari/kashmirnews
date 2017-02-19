@@ -1,0 +1,24 @@
+{
+  "manifest_version": 2,
+  "name": "KashmirNews",
+  "short_name": "KashmirNew",
+  "description": "Replaces Chrome's default tab with latest news from Kashmirs two top newspapers",
+  "version": "0.1",
+  "permissions": [
+    "tabs",
+    "storage",
+    "webNavigation"
+  ],
+  "icons": {
+    "16": "favicons/KN16.png",
+    "48": "favicons/KN48.png",
+    "128": "favicons/KN128.png"
+  },
+  "chrome_url_overrides": {
+    "newtab": "kashmirnews.html"
+  },
+  "homepage_url": "https://bassam.co/",
+  "browser_action": {
+    "default_title": "KashmirNews"
+  }
+}
